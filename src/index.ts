@@ -5,4 +5,6 @@ const app = new App({
   routes: [new NewsRoute()],
 });
 
-app.init();
+(async function () {
+  await app.init();
+})();

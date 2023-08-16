@@ -1,5 +1,5 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import { Article } from '../interfaces/articles.interface.js';
+import { Article } from '../models/article.model.js';
 import NewsService from '../services/news.service.js';
 
 export default class NewsController {
@@ -11,10 +11,19 @@ export default class NewsController {
     next: NextFunction
   ) => {
     try {
-      // const findAllArticlesData: Article[] =
-      await this.newsService.findAllArticles();
+      const findAllArticlesData = await this.newsService.findAllArticles();
 
-      res.status(200).json({ data: [], message: 'findAll' });
+      const savePromises = findAllArticlesData.map(article => {
+        const articleModel = new Article({
+          ...article
+        })
+
+        return articleModel.save()
+      });
+
+      await Promise.all(savePromises);
+
+      res.status(200).json({ message: 'Saved Articles to database' });
     } catch (error) {
       next(error);
     }
