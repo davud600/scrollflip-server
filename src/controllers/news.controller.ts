@@ -10,7 +10,7 @@ export default class NewsController {
     next: NextFunction
   ) => {
     try {
-      let { limit, page }: any = req.query;
+      let { limit, page, search_query }: any = req.query;
 
       if (typeof limit !== typeof 'str') {
         limit = 0;
@@ -18,10 +18,14 @@ export default class NewsController {
       if (typeof page !== typeof 'str') {
         page = 0;
       }
+      if (typeof search_query !== typeof 'str') {
+        search_query = '';
+      }
 
       const findAllArticlesData = await this.newsService.getArticlesFromDb(
         parseInt(limit as unknown as string),
-        parseInt(page as unknown as string)
+        parseInt(page as unknown as string),
+        search_query
       );
 
       res.status(200).json({ data: findAllArticlesData });

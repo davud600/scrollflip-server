@@ -15,21 +15,30 @@ export default class NewsService {
 
   public async getArticlesFromDb(
     limit: number = 0,
-    page: number = 0
+    page: number = 0,
+    search_query: string = ''
   ): Promise<Article[]> {
     let articles: Article[] = [];
+    const filter = !!search_query
+      ? {
+          $or: [
+            { title: { $regex: search_query, $options: 'i' } },
+            { description: { $regex: search_query, $options: 'i' } },
+          ],
+        }
+      : {};
 
     try {
       if (limit === 0) {
         articles = await ArticleModel.find();
       } else {
-        const cursor = await ArticleModel.find()
+        const cursor = await ArticleModel.find(filter)
           .sort({ datefield: -1 })
           .limit(limit)
           .skip(limit * page);
 
         for await (const doc of cursor) {
-          articles = [...articles, doc as unknown as Article];
+          articles.push(doc as unknown as Article);
         }
       }
     } catch (error) {
