@@ -1,10 +1,11 @@
 import express, { type Express } from 'express';
-import { PORT } from './env.js';
+import { CORS_ORIGIN, PORT } from './env.js';
 import { Route } from './interfaces/routes.interface.js';
 import { AppConstructorParams } from './interfaces/app.interface.js';
 import MongoDbClient from './db/mongodb.js';
 import cron from 'node-cron';
 import NewsService from './services/news.service.js';
+import cors from 'cors';
 
 export default class App {
   private app: Express;
@@ -17,6 +18,11 @@ export default class App {
   public constructor({ routes }: AppConstructorParams) {
     this.app = express();
     this.app.use(express.json());
+    this.app.use(
+      cors({
+        origin: CORS_ORIGIN,
+      })
+    );
     this.routes = routes;
     this.newsService = new NewsService();
   }
