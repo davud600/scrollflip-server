@@ -13,6 +13,36 @@ export default class NewsService {
 
   constructor() {}
 
+  public async getArticlesFromDb(): Promise<Article[]> {
+    let articles: Article[] = []
+    
+    try {
+      articles = await ArticleModel.find();
+    } catch (error) {
+      console.log(error)
+    }
+
+    return articles
+  }
+
+  public async saveArticlesToDb(): Promise<void> {
+    try {
+      const findAllArticlesData = await this.findAllArticles();
+
+      const savePromises = findAllArticlesData.map(article => {
+        const articleModel = new ArticleModel({
+          ...article
+        })
+
+        return articleModel.save()
+      });
+
+      await Promise.all(savePromises);
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   public async findArticlesBySource(
     Source: RssSource,
     category: string = ''

@@ -11,19 +11,9 @@ export default class NewsController {
     next: NextFunction
   ) => {
     try {
-      const findAllArticlesData = await this.newsService.findAllArticles();
+      const findAllArticlesData = await this.newsService.getArticlesFromDb();
 
-      const savePromises = findAllArticlesData.map(article => {
-        const articleModel = new Article({
-          ...article
-        })
-
-        return articleModel.save()
-      });
-
-      await Promise.all(savePromises);
-
-      res.status(200).json({ message: 'Saved Articles to database' });
+      res.status(200).json({ data: findAllArticlesData });
     } catch (error) {
       next(error);
     }
