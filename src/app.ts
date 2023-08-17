@@ -3,6 +3,8 @@ import { PORT } from './env.js';
 import { Route } from './interfaces/routes.interface.js';
 import { AppConstructorParams } from './interfaces/app.interface.js';
 import MongoDbClient from './db/mongodb.js';
+import cron from 'node-cron';
+import NewsService from './services/news.service.js';
 
 export default class App {
   private app: Express;
@@ -10,10 +12,13 @@ export default class App {
 
   private routes: Route[];
 
+  private newsService: NewsService;
+
   public constructor({ routes }: AppConstructorParams) {
     this.app = express();
     this.app.use(express.json());
     this.routes = routes;
+    this.newsService = new NewsService();
   }
 
   public async init() {
@@ -23,6 +28,8 @@ export default class App {
 
     this.initRoutes();
     this.connectToMondoDb();
+    // this.startSavingArticlesCronJob();
+    // this.startDeletingArticlesCronJob();
   }
 
   private initRoutes() {
@@ -33,5 +40,19 @@ export default class App {
 
   private connectToMondoDb() {
     MongoDbClient.connect();
+  }
+
+  private startSavingArticlesCronJob() {
+    cron.schedule('* * * * *', () => {
+      console.log('running every minute');
+      this.newsService.saveArticlesToDb();
+    });
+  }
+
+  private startDeletingArticlesCronJob() {
+    cron.schedule('* * * * *', () => {
+      console.log('running every minute');
+      this.newsService.deleteArticlesFromDb();
+    });
   }
 }

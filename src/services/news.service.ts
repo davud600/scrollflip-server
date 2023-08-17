@@ -9,20 +9,38 @@ export default class NewsService {
     url: 'https://www.buzzfeed.com/',
   };
 
-  private ArticleSources: RssSource[] = [this.BuzFeedRss]
+  private ArticleSources: RssSource[] = [this.BuzFeedRss];
 
   constructor() {}
 
   public async getArticlesFromDb(): Promise<Article[]> {
-    let articles: Article[] = []
-    
+    let articles: Article[] = [];
+
     try {
       articles = await ArticleModel.find();
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
 
-    return articles
+    return articles;
+  }
+
+  public async deleteArticlesFromDb(): Promise<void> {
+    let articles: Article[] = [];
+
+    try {
+      articles = await ArticleModel.find();
+
+      const savePromises = articles.map(article => {
+        return ArticleModel.deleteOne({
+          rssId: article.rssId,
+        });
+      });
+
+      await Promise.all(savePromises);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   public async saveArticlesToDb(): Promise<void> {
@@ -31,15 +49,15 @@ export default class NewsService {
 
       const savePromises = findAllArticlesData.map(article => {
         const articleModel = new ArticleModel({
-          ...article
-        })
+          ...article,
+        });
 
-        return articleModel.save()
+        return articleModel.save();
       });
 
       await Promise.all(savePromises);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
@@ -55,7 +73,7 @@ export default class NewsService {
       category: any;
       items: any[];
     };
-    const articles: Article[] = []
+    const articles: Article[] = [];
 
     try {
       res = await parse(`${Source.url}/${category}.xml`);
@@ -74,35 +92,35 @@ export default class NewsService {
         });
       });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-    
+
     return articles;
   }
 
   public async findAllArticles(category: string = ''): Promise<Article[]> {
-    const allArticles: Article[] = []
-    
+    const allArticles: Article[] = [];
+
     try {
       const savePromises = this.ArticleSources.map(articleSource => {
-        return new Promise<void>((resolve) => {
+        return new Promise<void>(resolve => {
           this.findArticlesBySource(articleSource).then(articlesOfSource => {
             articlesOfSource.forEach(articleOfSource => {
               allArticles.push(articleOfSource);
-            })
+            });
 
             resolve();
-          })
-        })
-      })
+          });
+        });
+      });
 
       await Promise.all(savePromises);
 
-      console.log({allArticles})
+      console.log({ allArticles });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
 
-    return allArticles
+    return allArticles;
   }
 }
