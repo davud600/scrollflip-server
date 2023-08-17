@@ -13,13 +13,27 @@ export default class NewsService {
 
   constructor() {}
 
-  public async getArticlesFromDb(): Promise<Article[]> {
+  public async getArticlesFromDb(
+    limit: number = 0,
+    page: number = 0
+  ): Promise<Article[]> {
     let articles: Article[] = [];
 
     try {
-      articles = await ArticleModel.find();
+      if (limit === 0) {
+        articles = await ArticleModel.find();
+      } else {
+        const cursor = await ArticleModel.find()
+          .sort({ datefield: -1 })
+          .limit(limit)
+          .skip(limit * page);
+
+        for await (const doc of cursor) {
+          articles = [...articles, doc as unknown as Article];
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     return articles;
@@ -39,7 +53,7 @@ export default class NewsService {
 
       await Promise.all(savePromises);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -115,8 +129,6 @@ export default class NewsService {
       });
 
       await Promise.all(savePromises);
-
-      console.log({ allArticles });
     } catch (error) {
       console.error(error);
     }
