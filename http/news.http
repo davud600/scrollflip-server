@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/news
+GET http://localhost:3000/api/news?limit=10&page=0
