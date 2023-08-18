@@ -1,5 +1,9 @@
-GET http://localhost:3000/api/news?limit=10&page=0
+GET http://localhost:3000/api/news?limit=5&page=0
 
 ###
 
 GET http://localhost:3000/api/news?limit=10&page=0&search_query=jewish
+
+###
+
+GET http://localhost:3000/api/news?limit=5&page=9

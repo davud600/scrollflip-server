@@ -33,7 +33,7 @@ export default class NewsService {
         articles = await ArticleModel.find();
       } else {
         const cursor = await ArticleModel.find(filter)
-          .sort({ datefield: -1 })
+          // .sort({ datefield: -1 })
           .limit(limit)
           .skip(limit * page);
 
