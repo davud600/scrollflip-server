@@ -6,6 +6,7 @@ const { parse } = pkg;
 
 export default class NewsService {
   private BuzFeedRss: RssSource = {
+    title: 'BuzzFeed',
     url: 'https://www.buzzfeed.com/',
   };
 
@@ -112,6 +113,7 @@ export default class NewsService {
           published: rssArticle.published,
           created: rssArticle.created,
           category: rssArticle.category,
+          source: Source.title,
         });
       });
     } catch (error) {

@@ -5,14 +5,24 @@ const ArticleSchema = new mongoose.Schema({
   title: String,
   description: String,
   link: String,
-  author: String,
+  author: {
+    type: String,
+    required: false,
+  },
   published: Number,
   created: Number,
-  category: String,
+  category: {
+    type: String,
+    required: false,
+  },
+  source: {
+    type: String,
+    required: false,
+  },
 });
 
 export const Article = mongoose.model(
-  'NewsMediaArticles',
+  'NewsMediaDb',
   ArticleSchema,
-  'NewsMediaDb'
+  'NewsMediaArticles'
 );

@@ -7,4 +7,5 @@ export interface Article {
   published: number;
   created: number;
   category: string;
+  source?: string;
 }
