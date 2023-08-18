@@ -17,17 +17,28 @@ export default class NewsService {
   public async getArticlesFromDb(
     limit: number = 0,
     page: number = 0,
-    search_query: string = ''
+    search_query: string = '',
+    category: string = ''
   ): Promise<Article[]> {
     let articles: Article[] = [];
-    const filter = !!search_query
-      ? {
-          $or: [
-            { title: { $regex: search_query, $options: 'i' } },
-            { description: { $regex: search_query, $options: 'i' } },
-          ],
-        }
-      : {};
+    let filter = {};
+
+    if (!!search_query) {
+      filter = {
+        ...filter,
+        $or: [
+          { title: { $regex: search_query, $options: 'i' } },
+          { description: { $regex: search_query, $options: 'i' } },
+        ],
+      };
+    }
+
+    if (!!category) {
+      filter = {
+        ...filter,
+        category,
+      };
+    }
 
     try {
       if (limit === 0) {
