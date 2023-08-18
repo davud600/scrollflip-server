@@ -1,5 +1,4 @@
 import { type NextFunction, type Request, type Response } from 'express';
-import { Article } from '../models/article.model.js';
 import NewsService from '../services/news.service.js';
 
 export default class NewsController {
@@ -11,7 +10,23 @@ export default class NewsController {
     next: NextFunction
   ) => {
     try {
-      const findAllArticlesData = await this.newsService.getArticlesFromDb();
+      let { limit, page, search_query }: any = req.query;
+
+      if (typeof limit !== typeof 'str') {
+        limit = 0;
+      }
+      if (typeof page !== typeof 'str') {
+        page = 0;
+      }
+      if (typeof search_query !== typeof 'str') {
+        search_query = '';
+      }
+
+      const findAllArticlesData = await this.newsService.getArticlesFromDb(
+        parseInt(limit as unknown as string),
+        parseInt(page as unknown as string),
+        search_query
+      );
 
       res.status(200).json({ data: findAllArticlesData });
     } catch (error) {

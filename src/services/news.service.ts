@@ -6,6 +6,7 @@ const { parse } = pkg;
 
 export default class NewsService {
   private BuzFeedRss: RssSource = {
+    title: 'BuzzFeed',
     url: 'https://www.buzzfeed.com/',
   };
 
@@ -13,13 +14,36 @@ export default class NewsService {
 
   constructor() {}
 
-  public async getArticlesFromDb(): Promise<Article[]> {
+  public async getArticlesFromDb(
+    limit: number = 0,
+    page: number = 0,
+    search_query: string = ''
+  ): Promise<Article[]> {
     let articles: Article[] = [];
+    const filter = !!search_query
+      ? {
+          $or: [
+            { title: { $regex: search_query, $options: 'i' } },
+            { description: { $regex: search_query, $options: 'i' } },
+          ],
+        }
+      : {};
 
     try {
-      articles = await ArticleModel.find();
+      if (limit === 0) {
+        articles = await ArticleModel.find();
+      } else {
+        const cursor = await ArticleModel.find(filter)
+          // .sort({ datefield: -1 })
+          .limit(limit)
+          .skip(limit * page);
+
+        for await (const doc of cursor) {
+          articles.push(doc as unknown as Article);
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     return articles;
@@ -39,7 +63,7 @@ export default class NewsService {
 
       await Promise.all(savePromises);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -89,6 +113,7 @@ export default class NewsService {
           published: rssArticle.published,
           created: rssArticle.created,
           category: rssArticle.category,
+          source: Source.title,
         });
       });
     } catch (error) {
@@ -115,8 +140,6 @@ export default class NewsService {
       });
 
       await Promise.all(savePromises);
-
-      console.log({ allArticles });
     } catch (error) {
       console.error(error);
     }
