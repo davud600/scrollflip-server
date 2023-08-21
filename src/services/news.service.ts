@@ -2,6 +2,7 @@ import pkg from 'rss-to-json';
 import { Article } from '../interfaces/articles.interface.js';
 import { RssSource } from '../interfaces/rss.interface.js';
 import { Article as ArticleModel } from '../models/article.model.js';
+import { shuffle } from '../utils/index.js';
 const { parse } = pkg;
 
 export default class NewsService {
@@ -57,7 +58,7 @@ export default class NewsService {
       console.error(error);
     }
 
-    return articles;
+    return shuffle(articles);
   }
 
   public async deleteArticlesFromDb(): Promise<void> {
