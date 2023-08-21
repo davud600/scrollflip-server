@@ -2,6 +2,7 @@ import pkg from 'rss-to-json';
 import { Article } from '../interfaces/articles.interface.js';
 import { RssSource } from '../interfaces/rss.interface.js';
 import { Article as ArticleModel } from '../models/article.model.js';
+import { shuffle } from '../utils/index.js';
 const { parse } = pkg;
 
 export default class NewsService {
@@ -17,17 +18,28 @@ export default class NewsService {
   public async getArticlesFromDb(
     limit: number = 0,
     page: number = 0,
-    search_query: string = ''
+    search_query: string = '',
+    category: string = ''
   ): Promise<Article[]> {
     let articles: Article[] = [];
-    const filter = !!search_query
-      ? {
-          $or: [
-            { title: { $regex: search_query, $options: 'i' } },
-            { description: { $regex: search_query, $options: 'i' } },
-          ],
-        }
-      : {};
+    let filter = {};
+
+    if (!!search_query) {
+      filter = {
+        ...filter,
+        $or: [
+          { title: { $regex: search_query, $options: 'i' } },
+          { description: { $regex: search_query, $options: 'i' } },
+        ],
+      };
+    }
+
+    if (!!category) {
+      filter = {
+        ...filter,
+        category,
+      };
+    }
 
     try {
       if (limit === 0) {
@@ -46,7 +58,7 @@ export default class NewsService {
       console.error(error);
     }
 
-    return articles;
+    return shuffle(articles);
   }
 
   public async deleteArticlesFromDb(): Promise<void> {
