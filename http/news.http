@@ -1,9 +1,44 @@
-GET http://localhost:3000/api/news?limit=5&page=1
+### NEWS
+GET http://localhost:3000/api/news
 
 ###
-
 GET http://localhost:3000/api/news?limit=10&page=0&search_query=jewish
 
 ###
+GET http://localhost:3000/api/news?limit=5&page=1&category=Sex & Love
 
-GET http://localhost:3000/api/news?limit=5&page=1&category=Internet Finds
+###
+GET http://localhost:3000/api/custom-news?limit=5&page=0
+
+### CUSTOM NEWS
+GET http://localhost:3000/api/custom-news?limit=5&page=0
+
+###
+POST http://localhost:3000/api/custom-news
+content-type: application/json
+
+{
+    "articleData": {
+        "title": "String",
+        "description": "String",
+        "thumbnailLink": "String",
+        "author": "sdf",
+        "content": "String",
+        "published": "Number",
+        "created": "Number",
+        "category": "String"
+    }
+}
+
+###
+PUT http://localhost:3000/api/custom-news/64e741c39bd1e48dd9bc74e0
+content-type: application/json
+
+{
+    "articleData": {
+        "title": "sdfjksdfnjsdkfhsd"
+    }
+}
+
+###
+DELETE http://localhost:3000/api/custom-news/64e73fadc8fab2304c4bdce7
