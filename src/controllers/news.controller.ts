@@ -1,8 +1,11 @@
 import { type NextFunction, type Request, type Response } from 'express';
+import CustomNewsService from '../services/custom-news.service.js';
 import NewsService from '../services/news.service.js';
+import { convertCustomArticleToStandard } from '../utils/custom-article.js';
 
 export default class NewsController {
   public newsService = new NewsService();
+  public customNewsService = new CustomNewsService();
 
   public getArticles = async (
     req: Request,
@@ -31,6 +34,23 @@ export default class NewsController {
         search_query,
         category
       );
+      const findCustomArticleData =
+        await this.customNewsService.getArticlesFromDb(
+          1,
+          parseInt(page as unknown as string)
+        );
+
+      if (findCustomArticleData[0]) {
+        const randomIndex = Math.floor(
+          Math.random() * (findAllArticlesData.length - 1)
+        );
+
+        findAllArticlesData.splice(
+          randomIndex,
+          0,
+          convertCustomArticleToStandard(findCustomArticleData[0])
+        );
+      }
 
       res.status(200).json({ data: findAllArticlesData });
     } catch (error) {

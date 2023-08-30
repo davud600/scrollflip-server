@@ -1,6 +1,7 @@
 export interface CustomArticle {
   title: string;
   description: string;
+  thumbnailLink?: string;
   content: string;
   author?: string;
   created?: number;
@@ -10,6 +11,7 @@ export interface CustomArticle {
 export interface CustomArticleUpdateData {
   title?: string;
   description?: string;
+  thumbnailLink?: string;
   content?: string;
   author?: string;
   created?: number;

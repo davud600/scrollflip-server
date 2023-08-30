@@ -12,8 +12,8 @@ export default class CustomNewsService {
     page: number = 0,
     search_query: string = '',
     category: string = ''
-  ): Promise<Article[]> {
-    let articles: Article[] = [];
+  ): Promise<CustomArticle[]> {
+    let articles: CustomArticle[] = [];
     let filter = {};
 
     if (!!search_query) {
@@ -43,7 +43,7 @@ export default class CustomNewsService {
           .skip(limit * page);
 
         for await (const doc of cursor) {
-          articles.push(doc as unknown as Article);
+          articles.push(doc as unknown as CustomArticle);
         }
       }
     } catch (error) {
