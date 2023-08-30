@@ -66,8 +66,6 @@ export default class CustomNewsController {
     try {
       await this.customNewsService.putArticle({ articleData, articleId: id });
 
-      console.log({ articleData, id });
-
       res.sendStatus(200);
     } catch (error) {
       next(error);
