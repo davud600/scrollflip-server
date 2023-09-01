@@ -1,11 +1,13 @@
 import { type NextFunction, type Request, type Response } from 'express';
 import CustomNewsService from '../services/custom-news.service.js';
 import NewsService from '../services/news.service.js';
+import UserService from '../services/user.service.js';
 import { convertCustomArticleToStandard } from '../utils/custom-article.js';
 
 export default class NewsController {
-  public newsService = new NewsService();
-  public customNewsService = new CustomNewsService();
+  private newsService = new NewsService();
+  private customNewsService = new CustomNewsService();
+  private usersService = new UserService();
 
   public getArticles = async (
     req: Request,
@@ -53,6 +55,31 @@ export default class NewsController {
       }
 
       res.status(200).json({ data: findAllArticlesData });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public updateLikedArticle = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { userId, likedArticle, articleId }: any = req.body;
+
+    try {
+      const message = await this.usersService.updateLikedStatusOfArticleInUser({
+        userId,
+        likedArticle,
+        articleId,
+      });
+
+      if (message) {
+        res.status(400).json({ message });
+        return;
+      }
+
+      res.status(200).json({ message: "Article added to user's likes!" });
     } catch (error) {
       next(error);
     }

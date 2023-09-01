@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb';
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
@@ -13,6 +14,14 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  likedArticles: {
+    type: [
+      {
+        articleId: String,
+      },
+    ],
+    default: [],
   },
   created: Number,
 });
