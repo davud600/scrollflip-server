@@ -105,15 +105,15 @@ export default class AuthController {
         return;
       }
 
-      const msg = await this.authService.signUp({
+      const message = await this.authService.signUp({
         username,
         email,
         password,
       });
 
-      if (!!msg) {
+      if (!!message) {
         res.status(400).json({
-          message: 'Account with given email already exists!',
+          message,
         });
       }
 
