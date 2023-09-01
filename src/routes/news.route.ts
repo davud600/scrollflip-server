@@ -13,5 +13,9 @@ export default class NewsRoute implements Route {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.newsController.getArticles);
+    this.router.post(
+      `${this.path}/like`,
+      this.newsController.updateLikedArticle
+    );
   }
 }

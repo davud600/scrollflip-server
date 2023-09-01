@@ -132,4 +132,52 @@ export default class UserService {
       console.error(error);
     }
   }
+
+  public async updateLikedStatusOfArticleInUser({
+    userId,
+    likedArticle,
+    articleId,
+  }: {
+    userId: string;
+    likedArticle: boolean;
+    articleId: string;
+  }): Promise<void | string> {
+    try {
+      const user = await UserModel.findById(userId);
+
+      if (!!!user) return 'User not found!';
+
+      if (likedArticle) {
+        await UserModel.updateOne(
+          { _id: new ObjectId(userId) },
+          {
+            likedArticles: [
+              ...user.likedArticles,
+              {
+                articleId,
+              },
+            ],
+          }
+        );
+        return;
+      }
+
+      // console.log(user.likedArticles);
+
+      const updatedLikedArticles = user.likedArticles.filter(currArticle => {
+        console.log({ currArticle });
+        console.log({ articleId });
+        return currArticle.articleId !== articleId;
+      });
+
+      await UserModel.updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          likedArticles: [...updatedLikedArticles],
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
