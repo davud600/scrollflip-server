@@ -58,10 +58,16 @@ export default class AuthService {
   }): Promise<void | string> {
     try {
       // Look for user with given email, throw error if found one
-      const user = await this.userService.getUserByEmail({ email });
+      const userFromEmail = await this.userService.getUserByEmail({ email });
+      const userFromUsername = await this.userService.getUserByUsername({
+        username,
+      });
 
-      if (!!user) {
-        return 'User with given email already exists!';
+      if (!!userFromEmail) {
+        return 'Email address is already in use!';
+      }
+      if (!!userFromUsername) {
+        return 'Username is taken!';
       }
 
       // create new user with userService

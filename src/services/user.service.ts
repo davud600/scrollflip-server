@@ -109,6 +109,20 @@ export default class UserService {
     }
   }
 
+  public async getUserByUsername({
+    username,
+  }: {
+    username: string;
+  }): Promise<User | undefined | null> {
+    try {
+      const user = await UserModel.findOne({ username });
+
+      return user;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public async deleteUser({ userId }: { userId: string }): Promise<void> {
     try {
       const user = await UserModel.findById(userId);
