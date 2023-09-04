@@ -1,7 +1,13 @@
+export interface LikedArticle {
+  _id: string;
+  articleId: string;
+}
+
 export interface User {
   _id?: any;
   username: string;
   email: string;
+  // likedArticles?: LikedArticle[];
   password: string;
   created?: Number;
 }

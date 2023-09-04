@@ -162,11 +162,7 @@ export default class UserService {
         return;
       }
 
-      // console.log(user.likedArticles);
-
       const updatedLikedArticles = user.likedArticles.filter(currArticle => {
-        console.log({ currArticle });
-        console.log({ articleId });
         return currArticle.articleId !== articleId;
       });
 
