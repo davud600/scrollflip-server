@@ -41,4 +41,46 @@ export default class UsersController {
       next(error);
     }
   };
+
+  public getUsersLikedArticles = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      let { email }: any = req.query;
+      const { authorization: token }: any = req.headers;
+
+      if (!!!token) {
+        return res.status(401).json('Unauthorized user');
+      }
+
+      try {
+        jwt.verify(
+          token.replace('Bearer ', ''),
+          JWT_SECRET as unknown as string
+        );
+      } catch (e) {
+        res.status(400).json('Token not valid');
+      }
+
+      if (typeof email !== typeof 'str') {
+        email = '';
+      }
+
+      const findArticlesData = await this.usersService.getUsersLikedArticles({
+        email,
+      });
+
+      if (!!!findArticlesData) {
+        return res
+          .status(400)
+          .json({ message: "Could not find this user's liked articles!" });
+      }
+
+      res.status(200).json({ data: findArticlesData });
+    } catch (error) {
+      next(error);
+    }
+  };
 }

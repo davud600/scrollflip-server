@@ -53,6 +53,17 @@ export default class CustomNewsService {
     return articles;
   }
 
+  public async getArticleById(
+    id: string
+  ): Promise<CustomArticle | undefined | null> {
+    try {
+      const article = await CustomArticleModel.findById(id);
+      return article as unknown as CustomArticle;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public async postArticle({
     articleData,
   }: {

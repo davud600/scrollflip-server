@@ -13,5 +13,9 @@ export default class UsersRoute implements Route {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.usersController.getUser);
+    this.router.get(
+      `${this.path}/liked-articles`,
+      this.usersController.getUsersLikedArticles
+    );
   }
 }
