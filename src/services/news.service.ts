@@ -61,6 +61,15 @@ export default class NewsService {
     return shuffle(articles);
   }
 
+  public async getArticleById(id: string): Promise<Article | undefined | null> {
+    try {
+      const article = await ArticleModel.findById(id);
+      return article as unknown as Article;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   public async deleteArticlesFromDb(): Promise<void> {
     let articles: Article[] = [];
 
