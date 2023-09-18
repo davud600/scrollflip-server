@@ -34,7 +34,7 @@ export default class App {
 
     this.initRoutes();
     this.connectToMondoDb();
-    // this.startSavingArticlesCronJob();
+    this.startSavingArticlesCronJob();
     // this.startDeletingArticlesCronJob();
   }
 
@@ -49,16 +49,14 @@ export default class App {
   }
 
   private startSavingArticlesCronJob() {
-    cron.schedule('* * * * *', () => {
-      console.log('running every minute');
+    cron.schedule('0 0 * * *', () => {
       this.newsService.saveArticlesToDb();
     });
   }
 
-  private startDeletingArticlesCronJob() {
-    cron.schedule('* * * * *', () => {
-      console.log('running every minute');
-      this.newsService.deleteArticlesFromDb();
-    });
-  }
+  // private startDeletingArticlesCronJob() {
+  //   cron.schedule('* * * * *', () => {
+  //     this.newsService.deleteArticlesFromDb();
+  //   });
+  // }
 }
