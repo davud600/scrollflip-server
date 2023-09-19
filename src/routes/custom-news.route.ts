@@ -12,6 +12,10 @@ export default class CustomNewsRoute implements Route {
   }
 
   private initializeRoutes() {
+    this.router.get(
+      `${this.path}/random`,
+      this.customNewsController.getRandomArticle
+    );
     this.router.get(`${this.path}`, this.customNewsController.getArticles);
     this.router.post(`${this.path}`, this.customNewsController.postArticle);
     this.router.get(`${this.path}/:id`, this.customNewsController.getArticle);
