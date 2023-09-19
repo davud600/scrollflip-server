@@ -17,7 +17,9 @@ export default class CustomNewsService {
         { $sample: { size: 1 } },
       ]);
 
-      articles = cursor.map(doc => doc as unknown as CustomArticle);
+      for await (const doc of cursor) {
+        articles.push(doc as unknown as CustomArticle);
+      }
     } catch (error) {
       console.error(error);
     }
