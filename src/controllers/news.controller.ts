@@ -37,10 +37,7 @@ export default class NewsController {
         category
       );
       const findCustomArticleData =
-        await this.customNewsService.getArticlesFromDb(
-          1,
-          parseInt(page as unknown as string)
-        );
+        await this.customNewsService.getRandomArticle();
 
       if (findCustomArticleData[0]) {
         const randomIndex = Math.floor(
