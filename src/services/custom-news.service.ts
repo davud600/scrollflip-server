@@ -7,6 +7,24 @@ import {
 import { CustomArticle as CustomArticleModel } from '../models/custom-article.model.js';
 
 export default class CustomNewsService {
+  public async getRandomArticle(): Promise<CustomArticle[]> {
+    let articles: CustomArticle[] = [];
+    let filter = {};
+
+    try {
+      const cursor = await CustomArticleModel.aggregate([
+        { $match: filter },
+        { $sample: { size: 1 } },
+      ]);
+
+      articles = cursor.map(doc => doc as unknown as CustomArticle);
+    } catch (error) {
+      console.error(error);
+    }
+
+    return articles;
+  }
+
   public async getArticlesFromDb(
     limit: number = 0,
     page: number = 0,
