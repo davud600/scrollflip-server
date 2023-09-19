@@ -4,7 +4,7 @@ import CustomNewsService from '../services/custom-news.service.js';
 export default class CustomNewsController {
   public customNewsService = new CustomNewsService();
 
-  public getArticles = async (
+  public getRandomArticle = async (
     req: Request,
     res: Response,
     next: NextFunction
@@ -12,6 +12,41 @@ export default class CustomNewsController {
     try {
       const findAllArticlesData =
         await this.customNewsService.getRandomArticle();
+
+      res.status(200).json({ data: findAllArticlesData });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getArticles = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      let { limit, page, search_query, category }: any = req.query;
+
+      if (typeof limit !== typeof 'str') {
+        limit = 0;
+      }
+      if (typeof page !== typeof 'str') {
+        page = 0;
+      }
+      if (typeof search_query !== typeof 'str') {
+        search_query = '';
+      }
+      if (typeof category !== typeof 'str') {
+        category = '';
+      }
+
+      const findAllArticlesData =
+        await this.customNewsService.getArticlesFromDb(
+          parseInt(limit as unknown as string),
+          parseInt(page as unknown as string),
+          search_query,
+          category
+        );
 
       res.status(200).json({ data: findAllArticlesData });
     } catch (error) {
