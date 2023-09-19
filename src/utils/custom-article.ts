@@ -8,7 +8,8 @@ interface CustomArticleDocument extends CustomArticle {
 export function convertCustomArticleToStandard(
   customArticle: CustomArticleDocument
 ): Article {
-  const article = { ...customArticle.toObject() };
+  // const article = { ...customArticle.toObject() };
+  const article = { ...customArticle };
 
   return {
     ...article,

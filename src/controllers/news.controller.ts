@@ -39,6 +39,8 @@ export default class NewsController {
       const findCustomArticleData =
         await this.customNewsService.getRandomArticle();
 
+      console.log(findCustomArticleData[0]);
+
       if (findCustomArticleData[0]) {
         const randomIndex = Math.floor(
           Math.random() * (findAllArticlesData.length - 1)
