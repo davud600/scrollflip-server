@@ -11,7 +11,7 @@ GET http://localhost:3000/api/news?limit=5&page=1&category=Sex & Love
 GET http://localhost:3000/api/custom-news?limit=5&page=0
 
 ### CUSTOM NEWS
-GET http://localhost:3000/api/custom-news?limit=5&page=0
+GET http://localhost:3000/api/custom-news
 
 ###
 POST http://localhost:3000/api/custom-news
