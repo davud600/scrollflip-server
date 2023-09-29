@@ -5,7 +5,13 @@ GET http://localhost:3000/api/news
 GET http://localhost:3000/api/news?limit=10&page=0&search_query=
 
 ###
+GET http://localhost:3000/api/news?search_query=Jennifer Lopez, Demi Lovato, Bill Nye, And 26 Other Celebrities Who
+
+###
 GET http://localhost:3000/api/news?limit=5&page=1&category=Sex & Love
+
+###
+GET http://localhost:3000/api/news/delete-test?limit=700
 
 ###
 GET http://localhost:3000/api/custom-news?limit=5&page=0
@@ -39,31 +45,3 @@ content-type: application/json
         "title": "sdfjksdfnjsdkfhsd"
     }
 }
-
-###
-DELETE http://localhost:3000/api/custom-news/64e73fadc8fab2304c4bdce7
-
-###
-POST http://localhost:3000/api/auth/signup
-content-type: application/json
-
-{
-    "username": "davud",
-    "password": "davud",
-    "confirmPassword": "davud",
-    "email": "davud@gmail.com"
-}
-
-###
-POST http://localhost:3000/api/auth/login
-content-type: application/json
-
-{
-    "email": "davud@gmail.com",
-    "password": "chkdsk34"
-}
-
-###
-GET http://localhost:3000/api/users/liked-articles?email=davud@gmail.com
-content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjIxMzZmMTdkYTI1YzBmYjQ0NTdmNCIsImlhdCI6MTY5MzgzMTIzMiwiZXhwIjoxNjkzOTE3NjMyfQ.-Txz11fby68kyTPC78GEev4DdFJkZnD4KfovPkrKhew

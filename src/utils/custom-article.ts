@@ -6,10 +6,12 @@ interface CustomArticleDocument extends CustomArticle {
 }
 
 export function convertCustomArticleToStandard(
-  customArticle: CustomArticleDocument
+  customArticle: CustomArticleDocument,
+  convertToObject: boolean = false
 ): Article {
-  // const article = { ...customArticle.toObject() };
-  const article = { ...customArticle };
+  const article = convertToObject
+    ? { ...customArticle.toObject() }
+    : { ...customArticle };
 
   return {
     ...article,
