@@ -17,5 +17,9 @@ export default class NewsRoute implements Route {
       `${this.path}/like`,
       this.newsController.updateLikedArticle
     );
+    this.router.get(
+      `${this.path}/delete-test`,
+      this.newsController.deleteArticles
+    );
   }
 }

@@ -36,21 +36,31 @@ export default class NewsController {
         search_query,
         category
       );
-      const findCustomArticleData =
-        await this.customNewsService.getRandomArticle();
 
-      console.log(findCustomArticleData[0]);
+      if (!!!search_query) {
+        const findCustomArticleData =
+          await this.customNewsService.getRandomArticle();
 
-      if (findCustomArticleData[0]) {
-        const randomIndex = Math.floor(
-          Math.random() * (findAllArticlesData.length - 1)
-        );
+        if (findCustomArticleData[0]) {
+          const randomIndex = Math.floor(
+            Math.random() * (findAllArticlesData.length - 1)
+          );
 
-        findAllArticlesData.splice(
-          randomIndex,
-          0,
-          convertCustomArticleToStandard(findCustomArticleData[0])
-        );
+          findAllArticlesData.splice(
+            randomIndex,
+            0,
+            convertCustomArticleToStandard(findCustomArticleData[0])
+          );
+        }
+      } else {
+        const findCustomArticleData =
+          await this.customNewsService.getArticlesFromDb(3, page, search_query);
+
+        findCustomArticleData.forEach(customArticle => {
+          findAllArticlesData.push(
+            convertCustomArticleToStandard(customArticle, true)
+          );
+        });
       }
 
       res.status(200).json({ data: findAllArticlesData });
@@ -79,6 +89,22 @@ export default class NewsController {
       }
 
       res.status(200).json({ message: "Article added to user's likes!" });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteArticles = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { limit }: any = req.params;
+
+    try {
+      await this.newsService.deleteArticlesFromDb(limit);
+
+      res.status(200).json({ message: 'Articles deleted' });
     } catch (error) {
       next(error);
     }

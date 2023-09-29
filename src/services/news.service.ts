@@ -11,7 +11,21 @@ export default class NewsService {
     url: 'https://www.buzzfeed.com/',
   };
 
-  private ArticleSources: RssSource[] = [this.BuzFeedRss];
+  private MashableRss: RssSource = {
+    title: 'Mashable',
+    url: 'https://feeds.feedburner.com/Mashable',
+  };
+
+  private UpworthyRss: RssSource = {
+    title: 'Upworthy',
+    url: 'https://feeds.feedburner.com/Upworthy',
+  };
+
+  private ArticleSources: RssSource[] = [
+    this.BuzFeedRss,
+    this.MashableRss,
+    // this.UpworthyRss,
+  ];
 
   constructor() {}
 
@@ -46,7 +60,7 @@ export default class NewsService {
         articles = await ArticleModel.find();
       } else {
         const cursor = await ArticleModel.find(filter)
-          // .sort({ datefield: -1 })
+          .sort({ datefield: -1 })
           .limit(limit)
           .skip(limit * page);
 
@@ -70,11 +84,21 @@ export default class NewsService {
     }
   }
 
-  public async deleteArticlesFromDb(): Promise<void> {
+  public async deleteArticlesFromDb(
+    limit: number | null = null
+  ): Promise<void> {
     let articles: Article[] = [];
 
     try {
-      articles = await ArticleModel.find();
+      if (!!!limit) {
+        articles = await ArticleModel.find();
+      } else {
+        const cursor = await ArticleModel.find().limit(limit);
+
+        for await (const doc of cursor) {
+          articles.push(doc as unknown as Article);
+        }
+      }
 
       const savePromises = articles.map(article => {
         return ArticleModel.deleteOne({
@@ -92,7 +116,7 @@ export default class NewsService {
     try {
       const findAllArticlesData = await this.findAllArticles();
 
-      const savePromises = findAllArticlesData.map(article => {
+      const savePromises = shuffle(findAllArticlesData).map(article => {
         const articleModel = new ArticleModel({
           ...article,
         });
@@ -128,12 +152,18 @@ export default class NewsService {
         articles.push({
           rssId: rssArticle.id,
           title: rssArticle.title,
-          description: rssArticle.description,
+          description:
+            typeof rssArticle.description === typeof []
+              ? rssArticle.description[1]
+              : rssArticle.description,
           link: rssArticle.link,
           author: rssArticle.author,
           published: rssArticle.published,
           created: rssArticle.created,
-          category: rssArticle.category,
+          category:
+            typeof rssArticle.category === typeof []
+              ? rssArticle.category[1]
+              : rssArticle.category,
           source: Source.title,
         });
       });

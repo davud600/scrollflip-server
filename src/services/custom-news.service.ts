@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb';
-import { Article } from '../interfaces/articles.interface.js';
 import {
   CustomArticle,
   CustomArticleUpdateData,
