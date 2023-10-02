@@ -2,7 +2,7 @@
 GET http://localhost:3000/api/news
 
 ###
-GET http://localhost:3000/api/news?limit=10&page=0&search_query=
+GET http://localhost:3000/api/news?limit=6&page=0&search_query=
 
 ###
 GET http://localhost:3000/api/news?search_query=Jennifer Lopez, Demi Lovato, Bill Nye, And 26 Other Celebrities Who
