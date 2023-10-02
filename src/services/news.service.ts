@@ -60,7 +60,7 @@ export default class NewsService {
         articles = await ArticleModel.find();
       } else {
         const cursor = await ArticleModel.find(filter)
-          .sort({ datefield: -1 })
+          // .sort({ datefield: -1 })
           .limit(limit)
           .skip(limit * page);
 
@@ -116,7 +116,16 @@ export default class NewsService {
     try {
       const findAllArticlesData = await this.findAllArticles();
 
-      const savePromises = shuffle(findAllArticlesData).map(article => {
+      const savePromises = shuffle(findAllArticlesData).map(async article => {
+        // check if article with same title exists
+        const identicalArticle = await ArticleModel.findOne({
+          title: article.title,
+        });
+
+        if (!!identicalArticle) {
+          return;
+        }
+
         const articleModel = new ArticleModel({
           ...article,
         });
