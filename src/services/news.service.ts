@@ -60,9 +60,9 @@ export default class NewsService {
         articles = await ArticleModel.find();
       } else {
         const cursor = await ArticleModel.find(filter)
-          // .sort({ datefield: -1 })
-          .limit(limit)
-          .skip(limit * page);
+          .sort({ created: -1 })
+          .skip(limit * page)
+          .limit(limit);
 
         for await (const doc of cursor) {
           articles.push(doc as unknown as Article);
